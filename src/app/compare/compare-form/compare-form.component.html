@@ -31,16 +31,21 @@
         <button (click)="addMoreKey()" class="btn btn-sm btn-success">Tambah</button>
         </h4>
         <div formArrayName="rekonCompareKey"
-            *ngFor="let key of compareFormGroup.get('rekonCompareKey'); let i = index;">
-            <div [formGroupName]="i">
-                <input formControlName="keyName" placeholder="Key">
+            *ngFor="let key of compareFormGroup.get('rekonCompareKey').value; let i = index; trackBy:trackByFn">
+            <div [formGroupName]="i" class="row form-group">
+            <div class="col-sm-11">
+                <input class="form-control" type="text" formControlName="keyName" placeholder="Key">
+            </div>
+            <div class="col-sm-1">
                 <a class="text-danger" (click)="removeKey(i)"><fa-icon [icon]="'times'" size="xs"></fa-icon></a>
+            </div>
             </div>
         </div>
         <br>
         <div class="pull-right">
             <button (click)="submitResult()" class="btn btn-primary btn-sm">Result</button>
         </div>
+        <br>
         <br>
     </div>
 </form>

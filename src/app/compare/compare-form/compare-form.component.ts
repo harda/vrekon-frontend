@@ -20,7 +20,6 @@ export class CompareFormComponent implements OnInit {
   compareFormGroup : FormGroup
   institutes : IInstitute[]
   compareF : ICompareForm
-  //keys : ICompareKey[]
 
   constructor(
     private fb : FormBuilder,
@@ -70,13 +69,13 @@ export class CompareFormComponent implements OnInit {
     });
   }
 
-  getKeys(){
+  gKeys(){
     return this.compareFormGroup.get("rekonCompareKey") as FormArray;
   }
 
   addMoreKey(){
     
-    let kys = this.getKeys();
+    let kys = this.gKeys();
     kys.push(this.createKey(null));
   }
 
@@ -106,7 +105,10 @@ export class CompareFormComponent implements OnInit {
   }
   removeKey(i){
     console.log(i)
-    let kys = this.getKeys();
+    let kys = this.gKeys();
     kys.removeAt(i);
+  }
+  trackByFn(index: any, item: any) {
+    return index;
   }
 }
