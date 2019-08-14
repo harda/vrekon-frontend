@@ -31,7 +31,7 @@
         <button (click)="addMoreKey()" class="btn btn-sm btn-success">Tambah</button>
         </h4>
         <div formArrayName="rekonCompareKey"
-            *ngFor="let key of compareFormGroup.get('rekonCompareKey').controls; let i = index;">
+            *ngFor="let key of compareFormGroup.get('rekonCompareKey'); let i = index;">
             <div [formGroupName]="i">
                 <input formControlName="keyName" placeholder="Key">
                 <a class="text-danger" (click)="removeKey(i)"><fa-icon [icon]="'times'" size="xs"></fa-icon></a>

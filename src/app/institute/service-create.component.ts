@@ -36,6 +36,10 @@ export class ServiceCreateComponent implements OnInit {
     'dbTableName':{
       'required': " table name is required"
     },
+    'status':{
+      'required': " status is required"
+    },
+    
   }
 
   formErrors = {
@@ -45,6 +49,7 @@ export class ServiceCreateComponent implements OnInit {
     'dbUsername':"", 
     'dbPassword':"", 
     'dbTableName':"",
+    'status':""
   }
   isNewRecord : boolean
   isUpdating : boolean

@@ -51,4 +51,7 @@ export class CompareResultComponent implements OnInit {
     return (this.resultData.result == null);
   }
 
+  generateReport(){
+    alert("not yet implemented");
+  }
 }

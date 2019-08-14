@@ -44,7 +44,7 @@ export class UpdateInstituteComponent implements OnInit {
     });
   }
 
-  updateInstitute(id:number){
+  updateInstitute(){
     
     this.isUpdating = true;
     let newInstitute = new Institute();
@@ -58,7 +58,7 @@ export class UpdateInstituteComponent implements OnInit {
     this.service.updateInstitute(this.institute)
     .subscribe(
       (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(), 
-      (res: HttpErrorResponse) => this.onUpdateInstituteError()
+      (res: HttpErrorResponse) => this.onUpdateInstituteError(res)
     );
   }
   protected onUpdateInstituteSuccess() {
@@ -69,8 +69,9 @@ export class UpdateInstituteComponent implements OnInit {
   previousState() {
     window.history.back();
   }
-  protected onUpdateInstituteError() {
+  protected onUpdateInstituteError(res) {
       this.isUpdating = false;
+      console.log(res);
       //this.newInstituteForm.controls.institusiName.value="";
 
   }

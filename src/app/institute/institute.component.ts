@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { VrekonService } from "./vrekon.service";
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-
-import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-
 import { IInstitute, Institute } from '../shared/model/institute.model';
-import { IInstituteSrvc, InstituteSrvc } from '../shared/model/instituteSrvc.model';
-
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -55,7 +50,7 @@ export class InstituteComponent implements OnInit {
     .subscribe(
       (res: IInstitute[]) => {
         //console.log(res["response"][0]);
-        this.institutes=res["response"][0];
+        this.institutes = res["response"][0];
       }, 
       (res: HttpErrorResponse) => this.onError(res)
     );
@@ -79,7 +74,7 @@ export class InstituteComponent implements OnInit {
     newInstitute = this.newInstituteForm.value;
     this.service.createInstitute(newInstitute)
     .subscribe(
-      (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(), 
+      (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(res), 
       (res: HttpErrorResponse) => this.onUpdateInstituteError()
     );
   }
@@ -93,7 +88,7 @@ export class InstituteComponent implements OnInit {
     newInstitute = this.newInstituteForm.value;
     this.service.createInstitute(newInstitute)
     .subscribe(
-      (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(), 
+      (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(res), 
       (res: HttpErrorResponse) => this.onUpdateInstituteError()
     );
   }
@@ -112,7 +107,7 @@ export class InstituteComponent implements OnInit {
         this.isUpdating = false;
     });
   }
-  protected onUpdateInstituteSuccess() {
+  protected onUpdateInstituteSuccess(res) {
     this.isUpdating = false;
     this.newInstituteForm.reset();
     this.loadInstitutes();
@@ -122,14 +117,6 @@ export class InstituteComponent implements OnInit {
       this.isUpdating = false;
       //this.newInstituteForm.controls.institusiName.value="";
 
-  }
-
-  protected paginateData(data: IInstitute[], headers: HttpHeaders) {
-      //this.links = this.parseLinks.parse(headers.get('link'));
-      //this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-      for (let i = 0; i < data.length; i++) {
-          this.institutes.push(data[i]);
-      }
   }
 
   onError(msg: any){
