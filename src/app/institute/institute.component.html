@@ -1,0 +1,75 @@
+<div class="" >
+    <div class="well new-institute-form">
+
+        <h4>Tambah Institusi</h4>
+        <form [formGroup]="newInstituteForm" (ngSubmit)="newInstitute()" class="form-horizontal">
+        <div class="row form-group">
+            <div class="col-sm-5">
+                <label class="control-label" for="institusiTable">No</label><br>
+                <input formControlName="institusiTable" type="text" id="institusiTable" class="form-control"/>
+            </div>
+            <div class="col-sm-5">
+                <label class="control-label" for="institusiName">Name</label><br>
+                <input formControlName="name" type="text" id="institusiName" class="form-control"/>
+            </div>
+            <div class="col-sm-2"><br>
+                <button class="btn btn-primary btn-md pull right" type="button" (click)="addInstitute()" [disabled]="isUpdating">Submit</button>
+            </div>
+        </div>
+        </form>
+
+    </div>
+    <table class="table table-bordered table-stripped">
+        <tr  *ngFor="let institute of institutes; let i = index">
+            <td>
+                <div class="well well-warning">
+                    <div class="row">
+
+                        {{ i+1 }}.
+                        {{institute.name }}  
+                        <div class="btn-group pull-right">
+                            <button type="submit"
+                                [routerLink]="['/setup-service', institute.id, 'create-service']"
+                                class="btn btn-success btn-sm" [disabled]="isUpdating">
+                                <span class="d-none d-md-inline">Tambah</span>
+                            </button>
+                            <button type="submit"
+                                [routerLink]="['/setup-service', institute.id, 'update']"
+                                class="btn btn-warning btn-sm" [disabled]="isUpdating">
+                                <span class="d-none d-md-inline">Ubah</span>
+                            </button>
+                            <button class="btn btn-sm btn-danger" (click)="deleteInstitute(institute.id)" [disabled]="isUpdating">Hapus</button>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-3 " *ngFor="let srvc of institute.institusiService;">
+                            <div class="panel panel-{{serviceColor[srvc.status]}}">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        {{ srvc.dbName }}
+                                    </h3>
+                                </div>
+                                <div class="panel-body bg-{{serviceColor[srvc.status]}}">
+                                    Status : {{ srvc.status }}
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="btn-toolbar">
+                                    <button type="submit"
+                                        [routerLink]="['/setup-service', institute.id, 'update-service']"
+                                        class="btn btn-success btn-xs" [disabled]="isUpdating">
+                                        <fa-icon [icon]="'pencil-alt'" size="xs"></fa-icon>
+                                    </button>
+                                    <button class="btn btn-danger btn-xs" type="button" (click)="deleteService(srvc.id)" [disabled]="isUpdating">
+                                        <fa-icon [icon]="'times'" size="xs"></fa-icon>
+                                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

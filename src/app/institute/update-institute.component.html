@@ -1,0 +1,20 @@
+<div class="well new-institute-form">
+    <h3>Institute</h3>
+    <form [formGroup]="instituteForm"  class="form-horizontal">
+    <div class="row form-group">
+        <div class="col-sm-6">
+            <label class="control-label" for="institusiTable">Institute Table</label><br>
+            <input formControlName="institusiTable" type="text" id="institusiTable" class="form-control"/>
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label" for="institusiName">Name</label><br>
+            <input formControlName="name" type="text" id="institusiName" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <button class="btn btn-primary btn-md pull-right" type="button" (click)="updateInstitute()" [disabled]="isUpdating">Submit</button>
+        <button class="btn btn-default btn-md pull-left" type="button" (click)="previousState()">Back</button>
+    </div>
+    </form>
+
+</div>

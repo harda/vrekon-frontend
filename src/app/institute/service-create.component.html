@@ -1,0 +1,46 @@
+<div class="well form-new service">
+    <h3>Database Service Setting <span class="text-primary">{{institute.id}}</span></h3>
+        <form [formGroup]="dbServiceForm" class="form-horizontal">
+        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbType }">
+                <label class="control-label" for="dbType">Type</label>
+                <input formControlName="dbType" type="text" id="dbType" class="form-control" placeholder="Type"/>
+                <span class="help-block" *ngIf="formErrors.dbType">{{formErrors.dbType}}</span>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbHost }">
+                <label class="control-label" for="dbHost">Host</label>
+                <input formControlName="dbHost" type="text" id="Host" class="form-control" placeholder="Host"/>
+                <span class="help-block" *ngIf="formErrors.dbHost">{{formErrors.dbHost}}</span>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbName }">
+                <label class="control-label" for="dbName">Database Name</label>
+                <input formControlName="dbName" type="text" id="dbName" class="form-control" placeholder="Database Name"/>
+                <span class="help-block" *ngIf="formErrors.dbName">{{formErrors.dbName}}</span>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbUsername }">
+                <label class="control-label" for="dbUsername">Username</label>
+                <input formControlName="dbUsername" type="text" id="dbUsername" class="form-control" placeholder="Username"/>
+                <span class="help-block" *ngIf="formErrors.dbUsername">{{formErrors.dbUsername}}</span>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbPassword }">
+                <label class="control-label" for="dbPassword">Password</label>
+                <input formControlName="dbPassword" type="password" id="dbPassword" class="form-control" placeholder="Password"/>
+                <span class="help-block" *ngIf="formErrors.dbPassword">{{formErrors.dbPassword}}</span>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbTableName }">
+                <label class="control-label" for="dbTableName">Tablename</label>
+                <input formControlName="dbTableName" type="text" id="dbTableName" class="form-control" placeholder="Status"/>
+                <span class="help-block" *ngIf="formErrors.dbTableName">{{formErrors.dbTableName}}</span>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error' : formErrors.status }">
+                <label class="control-label" for="status">Status</label>
+                <input formControlName="status" type="text" id="status" class="form-control" placeholder="Type"/>
+                <span class="help-block" *ngIf="formErrors.status">{{formErrors.status}}</span>
+        </div>
+                
+        <div class="form-group">
+                <button class="btn btn-default btn-md pull-left" type="button" (click)="previousState()" [disabled]="isUpdating">Back</button>
+                <button class="btn btn-primary btn-md pull-right" type="button" (click)="onSubmit()" [disabled]="isUpdating">Submit</button>
+        </div>
+        </form>
+
+</div>
