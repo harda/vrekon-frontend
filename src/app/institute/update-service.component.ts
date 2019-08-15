@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -10,13 +10,15 @@ import { VrekonService } from "./vrekon.service";
 import { IDbSrvc, DbSrvc } from '../shared/model/dbSrvc.model';
 import { IInstituteTranslate, InstituteTranslate } from '../shared/model/InstituteTranslate.model';
 import { IdInstituteResolve } from './institute.route';
+import { VConst } from '../shared/constant';
+import { VHelper } from '../shared/helpers';
 
 @Component({
-  selector: 'app-service-create',
-  templateUrl: './service-create.component.html',
-  styleUrls: ['./service-create.component.scss']
+  selector: 'app-update-service',
+  templateUrl: './update-service.component.html',
+  styleUrls: ['./update-service.component.scss']
 })
-export class ServiceCreateComponent implements OnInit {
+export class UpdateServiceComponent implements OnInit {
   validationMsg = {
     'dbHost':{
       'required': ' Host is required',
@@ -39,7 +41,6 @@ export class ServiceCreateComponent implements OnInit {
     'status':{
       'required': " status is required"
     },
-    
   }
 
   formErrors = {
@@ -56,6 +57,8 @@ export class ServiceCreateComponent implements OnInit {
   institute : IInstitute
   dbService : IDbSrvc
   dbServiceForm : FormGroup
+  fileToUpload: File = null
+
   constructor(
     private fb : FormBuilder,
     private activatedRoute : ActivatedRoute,
@@ -65,15 +68,17 @@ export class ServiceCreateComponent implements OnInit {
   ngOnInit() {
     this.isNewRecord = true;
     this.isUpdating = false;
+    
     this.prepareNewForm();
-    this.activatedRoute.data.subscribe(({ dbService,institute }) => {
+    this.activatedRoute.data.subscribe(({ dbService,institutes,idInstitute }) => {
 
       this.dbService = new DbSrvc();
 
       if(dbService == null){
-        this.institute = institute;
+        this.institute = institutes["response"][0].find(x => x.id == idInstitute)
+        //this.institute = institute;
         this.dbService.dbSetting = new InstituteSrvc();
-        this.dbService.dbSetting.idInstitusi = institute.id;  
+        this.dbService.dbSetting.idInstitusi = this.institute.id;  
         
       }
       else{
@@ -90,18 +95,23 @@ export class ServiceCreateComponent implements OnInit {
     });
     
   }
-
+  get dbTypeOption(){
+    return VConst.DBTYPE;
+  }
+  get serviceStatusOption(){
+    return VConst.SERVICE_STATUS;
+  }
   prepareNewForm():void {
     
     this.dbServiceForm = this.fb.group({
       id:[""],
       idInstitusi:[""],
-      dbType:["",[Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
-      dbHost:["",Validators.required],
-      dbName:["",Validators.required],
-      dbUsername:["",Validators.required],
-      dbPassword:["",Validators.required],
-      dbTableName:["",Validators.required],
+      dbType:["DB",[Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
+      dbHost:["a",Validators.required],
+      dbName:["a",Validators.required],
+      dbUsername:["a",Validators.required],
+      dbPassword:["a",Validators.required],
+      dbTableName:["a",Validators.required],
       status:["Empty",Validators.required]
     });
 
@@ -142,42 +152,68 @@ export class ServiceCreateComponent implements OnInit {
   previousState() {
     window.history.back();
   }
-  onSubmit(): void {
-    this.isUpdating = true;
 
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+  }
+
+  checkFileName() : string{
+    if(this.fileToUpload !==null){
+      return this.fileToUpload.name;
+    }
+    else return "Browse";
+    
+  }
+  checkDbType(){
+    const dbType = this.dbServiceForm.get("dbType").value;
+    if(dbType === "text" || dbType === "excel"){
+      return true;
+    }
+    return false;
+  }
+  
+  onDbTypeChange(){
+    this.fileToUpload = null;
+  }
+  onSubmit(): void {
     let errCount = this.formValidation(this.dbServiceForm)
     if( errCount == 0 ){
-
+      this.isUpdating = true;
       this.dbService.dbSetting = this.dbServiceForm.value;
       this.dbService.dbSetting.idInstitusi = this.institute.id;
       if(this.isNewRecord){
-        this.service.createDbService(this.dbService)
+        this.service.createDbService(this.dbService,this.fileToUpload)
         .subscribe(
-            (res: HttpResponse<IDbSrvc>) => this.onUpdateServiceSuccess(), 
-            (res: HttpErrorResponse) => this.onUpdateServiceError()
+            (res: HttpResponse<IDbSrvc>) => this.onUpdateServiceSuccess(res), 
+            (res: HttpErrorResponse) => this.onUpdateServiceError(res)
         );
       }
       else{
         this.service.updateDbService(this.dbService)
         .subscribe(
-            (res: HttpResponse<IDbSrvc>) => this.onUpdateServiceSuccess(), 
-            (res: HttpErrorResponse) => this.onUpdateServiceError()
+            (res: HttpResponse<IDbSrvc>) => this.onUpdateServiceSuccess(res), 
+            (res: HttpErrorResponse) => this.onUpdateServiceError(res)
         );
       }
       
     }
     else{
-      console.log("err",errCount)
+      //console.log("err",errCount)
+    }
+  }
+
+  onUpdateServiceSuccess(res: HttpResponse<IDbSrvc>){
+    if(VHelper.responseStatus(res.body)){
+      this.previousState();
+    }
+    else{
+      alert(res.body['status']);
     }
     
+  }
+  onUpdateServiceError(res){
     
-
-  }
-
-  onUpdateServiceSuccess(){
-    this.previousState();
-  }
-  onUpdateServiceError(){
-
+    VHelper.ShowHttpError(res);
+    this.isUpdating=false
   }
 }

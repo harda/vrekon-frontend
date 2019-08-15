@@ -5,11 +5,6 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@a
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { VrekonService } from "../institute/vrekon.service";
-import { Institute, IInstitute } from '../shared/model/institute.model';
-import { InstituteSrvc, IInstituteSrvc } from '../shared/model/instituteSrvc.model';
-import { InstituteComponent } from '../institute/institute.component';
-import { UpdateInstituteComponent } from '../institute/update-institute.component'
-import { ServiceCreateComponent } from '../institute/service-create.component';
 import { CompareFormComponent } from './compare-form/compare-form.component';
 import { CompareResultComponent } from './compare-result/compare-result.component';
 

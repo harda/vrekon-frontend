@@ -4,6 +4,7 @@ import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/ht
 import { filter, map } from 'rxjs/operators';
 import { IInstitute, Institute } from '../shared/model/institute.model';
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
+import { VHelper } from '../shared/helpers';
 
 @Component({
   selector: 'app-institute',
@@ -35,7 +36,7 @@ export class InstituteComponent implements OnInit {
   prepareNewForm():void {
     this.newInstitute = new Institute();
     this.newInstituteForm = this.fb.group({
-      institusiTable:["",[Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
+      institusiTabel:["",[Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
       name:["",Validators.required],
     });
   }
@@ -75,7 +76,7 @@ export class InstituteComponent implements OnInit {
     this.service.createInstitute(newInstitute)
     .subscribe(
       (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(res), 
-      (res: HttpErrorResponse) => this.onUpdateInstituteError()
+      (res: HttpErrorResponse) => this.onUpdateInstituteError(res)
     );
   }
   updateInstitute(id:number){
@@ -89,7 +90,7 @@ export class InstituteComponent implements OnInit {
     this.service.createInstitute(newInstitute)
     .subscribe(
       (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(res), 
-      (res: HttpErrorResponse) => this.onUpdateInstituteError()
+      (res: HttpErrorResponse) => this.onUpdateInstituteError(res)
     );
   }
 
@@ -108,13 +109,21 @@ export class InstituteComponent implements OnInit {
     });
   }
   protected onUpdateInstituteSuccess(res) {
+
     this.isUpdating = false;
-    this.newInstituteForm.reset();
-    this.loadInstitutes();
+    if(VHelper.responseStatus(res.body)){
+      this.newInstituteForm.reset();
+      this.loadInstitutes();
+    }
+    else{
+      VHelper.ShowLog(res.body["log"]);
+    }
+    
   }
 
-  protected onUpdateInstituteError() {
+  protected onUpdateInstituteError(res) {
       this.isUpdating = false;
+      VHelper.ShowHttpError(res);
       //this.newInstituteForm.controls.institusiName.value="";
 
   }

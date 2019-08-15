@@ -9,7 +9,7 @@ import { IInstitute, Institute } from '../shared/model/institute.model';
 import { IInstituteSrvc, InstituteSrvc } from '../shared/model/instituteSrvc.model';
 
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
-
+import { VHelper } from '../shared/helpers';
 @Component({
   selector: 'app-update-institute',
   templateUrl: './update-institute.component.html',
@@ -25,21 +25,25 @@ export class UpdateInstituteComponent implements OnInit {
     private activatedRoute : ActivatedRoute
     ) { }
 
+
+  previousState() {
+    window.history.back();
+  }
+
   ngOnInit() {
     this.isUpdating=false;
     this.prepareNewForm();
 
-    this.activatedRoute.data.subscribe(({ institute }) => {
-      this.institute = institute;
-      console.log(institute);
-      this.instituteForm.setValue(this.institute);
+    this.activatedRoute.data.subscribe(({ idInstitute,institutes}) => {
+      this.institute = institutes["response"][0].find(x => x.id == idInstitute)
+      this.instituteForm.patchValue(this.institute);
     });
   }
   prepareNewForm():void {
     
     this.instituteForm = this.fb.group({
       id:[""],
-      institusiTable:["",[Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
+      institusiTabel:["",[Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
       name:["",Validators.required],
     });
   }
@@ -57,21 +61,25 @@ export class UpdateInstituteComponent implements OnInit {
     
     this.service.updateInstitute(this.institute)
     .subscribe(
-      (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(), 
+      (res: HttpResponse<IInstitute>) => this.onUpdateInstituteSuccess(res), 
       (res: HttpErrorResponse) => this.onUpdateInstituteError(res)
     );
   }
-  protected onUpdateInstituteSuccess() {
+  protected onUpdateInstituteSuccess(res) {
     this.isUpdating = false;
-    this.previousState();
+    if(VHelper.responseStatus(res.body)){
+      this.previousState();
+    }
+    else{
+      console.log(res.body);
+      VHelper.ShowLog(res.body["log"]);
+    }
+
     
   }
-  previousState() {
-    window.history.back();
-  }
-  protected onUpdateInstituteError(res) {
+  protected onUpdateInstituteError(res: HttpErrorResponse) {
       this.isUpdating = false;
-      console.log(res);
+      VHelper.ShowHttpError(res);
       //this.newInstituteForm.controls.institusiName.value="";
 
   }

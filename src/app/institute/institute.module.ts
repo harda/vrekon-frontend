@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { AppSharedModule } from '../shared/shared.module';
 import {
     InstituteComponent,
-    ServiceCreateComponent,
+    UpdateServiceComponent,
     instituteRoute,
     institutePopupRoute
 } from './';
@@ -12,7 +12,7 @@ import { UpdateInstituteComponent } from './update-institute.component';
 const ADDED_COMPONENT = [ 
     InstituteComponent,
     UpdateInstituteComponent,
-    ServiceCreateComponent,
+    UpdateServiceComponent,
 
 ];
 const MY_ROUTE = [

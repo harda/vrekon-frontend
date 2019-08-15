@@ -9,7 +9,7 @@ import { Institute, IInstitute } from '../shared/model/institute.model';
 import { InstituteSrvc, IInstituteSrvc } from '../shared/model/instituteSrvc.model';
 import { InstituteComponent } from './institute.component';
 import { UpdateInstituteComponent } from './update-institute.component'
-import { ServiceCreateComponent } from './service-create.component';
+import { UpdateServiceComponent } from './update-service.component';
 
 
 
@@ -28,6 +28,24 @@ export class InstituteResolve implements Resolve<IInstitute> {
              )
          }
          return of(institute);
+    }
+}
+@Injectable({ providedIn: 'root' })
+export class InstitutesResolve implements Resolve<IInstitute[]> {
+    constructor(private service: VrekonService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IInstitute[]> {
+         const id = route.params['id'] ? route.params['id'] : null;
+         const institutes = [new Institute()];
+         
+         if (id) {
+             return this.service.getSetupService()
+             .pipe(
+                 filter((mayBeOk: HttpResponse<IInstitute[]>) => mayBeOk.ok),
+                 map((response: HttpResponse<IInstitute[]>) => response.body)
+             )
+         }
+         return of(institutes);
     }
 }
 @Injectable({ providedIn: 'root' })
@@ -94,19 +112,22 @@ export const instituteRoute: Routes = [
         path: ':id/update',
         component: UpdateInstituteComponent,
         resolve: {
-            institute: InstituteResolve
+            institutes: InstitutesResolve,
+            idInstitute: IdInstituteResolve,
         },
     },
     {
         path: ':id/create-service',
-        component: ServiceCreateComponent,
+        component: UpdateServiceComponent,
         resolve: {
-            institute: InstituteResolve
+            
+            institutes: InstitutesResolve,
+            idInstitute: IdInstituteResolve,
         },
     },
     {
         path: ':id/update-service',
-        component: ServiceCreateComponent,
+        component: UpdateServiceComponent,
         resolve: {
             dbService: ServiceResolve
         },

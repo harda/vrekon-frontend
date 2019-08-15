@@ -3,7 +3,11 @@
         <form [formGroup]="dbServiceForm" class="form-horizontal">
         <div class="form-group" [ngClass]="{'has-error' : formErrors.dbType }">
                 <label class="control-label" for="dbType">Type</label>
-                <input formControlName="dbType" type="text" id="dbType" class="form-control" placeholder="Type"/>
+                <select class="form-control" formControlName="dbType" (change)="onDbTypeChange()">
+                <option  *ngFor="let dbtype of dbTypeOption | keyvalue" [value]="dbtype.key" >
+                        {{dbtype.value}}
+                </option>
+                </select>
                 <span class="help-block" *ngIf="formErrors.dbType">{{formErrors.dbType}}</span>
         </div>
         <div class="form-group" [ngClass]="{'has-error' : formErrors.dbHost }">
@@ -33,13 +37,33 @@
         </div>
         <div class="form-group" [ngClass]="{'has-error' : formErrors.status }">
                 <label class="control-label" for="status">Status</label>
-                <input formControlName="status" type="text" id="status" class="form-control" placeholder="Type"/>
+                <select class="form-control" formControlName="status" >
+                <option  *ngFor="let statusOption of serviceStatusOption | keyvalue" [value]="statusOption.key" >
+                        {{statusOption.value}}
+                </option>
+                </select>
+                
                 <span class="help-block" *ngIf="formErrors.status">{{formErrors.status}}</span>
         </div>
+        <div class="form-group" *ngIf="checkDbType()">
+                <label for="file">File</label><br>
+                <label id="file" class="btn btn-default btn-file form-control">
+                        {{checkFileName()}}
+                            
+                <input type="file"
+                        id="file"
+                        class="form-control"
+                        style="display: none;"
+                        (change)="handleFileInput($event.target.files)" />
+                        <!-- <input class="" type="text" disabled value="{{checkFileName()}}"/>  -->
+                       
+                </label>
                 
+        </div>
         <div class="form-group">
                 <button class="btn btn-default btn-md pull-left" type="button" (click)="previousState()" [disabled]="isUpdating">Back</button>
                 <button class="btn btn-primary btn-md pull-right" type="button" (click)="onSubmit()" [disabled]="isUpdating">Submit</button>
+                
         </div>
         </form>
 

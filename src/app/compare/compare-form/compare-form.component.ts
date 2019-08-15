@@ -9,7 +9,8 @@ import { ICompareForm, CompareForm } from 'src/app/shared/model/compare.model';
 import { ICompareResult } from 'src/app/shared/model/compareResult.model';
 
 import { Router, NavigationExtras} from "@angular/router";
-import { ResultData } from '../../providers/result-data'
+import { ResultData } from '../../providers/result-data';
+import { VHelper } from '../../shared/helpers';
 @Component({
   selector: 'app-compare-form',
   templateUrl: './compare-form.component.html',
@@ -90,18 +91,20 @@ export class CompareFormComponent implements OnInit {
   }
 
   onCompareSuccess(res){
-    // let navigationExtras: NavigationExtras = {
-    //   queryParams: {
-    //       "result": res,
-    //   }
-    // };
-    // this.router.navigate(["compare-result"], navigationExtras);
-    this.resultData.result = res;
-    this.router.navigate(["compare-result"]);
+
+    if(VHelper.responseStatus(res.body)){
+      this.resultData.result = res;
+      this.router.navigate(["compare-result"]);
+    }
+    else{
+      alert(res.body['status']);
+    }
+    
   }
 
   onCompareError(res){
-    console.log(res)
+    
+    VHelper.ShowHttpError(res);
   }
   removeKey(i){
     console.log(i)

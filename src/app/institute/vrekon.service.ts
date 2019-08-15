@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { IInstitute, Institute} from '../shared/model/institute.model'
 import { IInstituteSrvc } from '../shared/model/instituteSrvc.model';
@@ -35,16 +36,26 @@ export class VrekonService {
   findInstitute(model: IInstitute): Observable<EntityResponseType> {
     return this.http.post<IInstitute>(this.API_URL+"/institusi-find", model, { observe: 'response' });
   }
-  findDbService(model: IInstitute): Observable<EntityResponseType> {
-    return this.http.post<IInstitute>(this.API_URL+"/db-service", model, { observe: 'response' });
+  findDbService(model: IInstitute): Observable<HttpResponse<IDbSrvc>> {
+    return this.http.post<IDbSrvc>(this.API_URL+"/db-service", model, { observe: 'response' });
   }
 
-  createDbService(model: IDbSrvc) : Observable<HttpResponse<IDbSrvc>> {
-    return this.http.post<IDbSrvc>(this.API_URL+"/db-service-tambah", model, { observe: 'response' });
+  createDbService(model: IDbSrvc, file: File) : Observable<HttpResponse<IDbSrvc>> {
+    let input = new FormData();
+    input.append('json',JSON.stringify(model));
+    if(file !== null){
+      input.append('files', file , file.name);
+    }
+    else{
+      input.append('files',null);
+    }
+    return this.http.post<IDbSrvc>(this.API_URL+"/db-service-tambah", input, { observe: 'response' });//.pipe(map((resp: any) => resp));
+    //return this.http.post<IDbSrvc>(this.API_URL+"/db-service-tambah", model, { observe: 'response' });
   }
   updateDbService(model: IDbSrvc) : Observable<HttpResponse<IDbSrvc>> {
     return this.http.post<IDbSrvc>(this.API_URL+"/db-service-ubah", model, { observe: 'response' });
   }
+  
 
   compareData(model: ICompareForm) : Observable<HttpResponse<ICompareResult>> {
     return this.http.post<ICompareResult>(this.API_URL+"/compare-data", model, { observe: 'response' });
