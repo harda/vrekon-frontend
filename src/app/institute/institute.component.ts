@@ -5,6 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { IInstitute, Institute } from '../shared/model/institute.model';
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 import { VHelper } from '../shared/helpers';
+import { DbSrvc } from '../shared/model/dbSrvc.model';
 
 @Component({
   selector: 'app-institute',
@@ -133,4 +134,45 @@ export class InstituteComponent implements OnInit {
     console.log(msg);
   }
 
+  dbClearTmpService(idSrvc : number){
+    this.isUpdating = true;
+    this.service.clearTempDbService(idSrvc).subscribe(
+      (res: HttpResponse<any>) => this.onDeleteTempSuccess(res), 
+      (res: HttpErrorResponse) => this.onHttpError(res)
+    );
+  }
+
+  dbCopyStart(idSrvc : number){
+    this.isUpdating = true;
+    this.service.copyDbService(idSrvc).subscribe(
+      (res: HttpResponse<any>) => this.onCopyServiceSuccess(res), 
+      (res: HttpErrorResponse) => this.onHttpError(res)
+    );
+  }
+
+  onCopyServiceSuccess(res){
+    this.isUpdating = false;
+    if(VHelper.responseStatus(res.body)){
+      this.newInstituteForm.reset();
+      this.loadInstitutes();
+    }
+    else{
+      console.log(res);
+      //VHelper.ShowLog(res.body["log"]);
+    }
+  }
+  onDeleteTempSuccess(res){
+    this.isUpdating = false;
+    if(VHelper.responseStatus(res.body)){
+      this.newInstituteForm.reset();
+      this.loadInstitutes();
+    }
+    else{
+      VHelper.ShowLog(res.body["log"]);
+    }
+  }
+  onHttpError(res){
+    this.isUpdating = false;
+    VHelper.ShowHttpError(res);
+  }
 }

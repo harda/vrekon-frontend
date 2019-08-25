@@ -4,6 +4,7 @@ import { filter, map } from 'rxjs/operators';
 import { FormGroup,FormBuilder, Validators, FormArray } from '@angular/forms';
 import { VrekonService } from '../../institute/vrekon.service'
 import { IInstitute } from 'src/app/shared/model/institute.model';
+import { IInstituteSrvc } from 'src/app/shared/model/instituteSrvc.model';
 import { ICompareKey } from 'src/app/shared/model/compareKey.model';
 import { ICompareForm, CompareForm } from 'src/app/shared/model/compare.model';
 import { ICompareResult } from 'src/app/shared/model/compareResult.model';
@@ -20,6 +21,9 @@ export class CompareFormComponent implements OnInit {
 
   compareFormGroup : FormGroup
   institutes : IInstitute[]
+  services1 : IInstituteSrvc[]
+  services2 : IInstituteSrvc[]
+  
   compareF : ICompareForm
 
   constructor(
@@ -59,7 +63,9 @@ export class CompareFormComponent implements OnInit {
     this.compareFormGroup = this.fb.group({
       idInstitusiFrom:[""],
       idInstitusiTo:[""],
-      rekonCompareKey: this.fb.array([this.createKey("REF")])
+      idServiceFrom:[""],
+      idServiceTo:[""],
+      rekonCompareKey: this.fb.array([this.createKey(null)])
     });
   }
 
@@ -71,7 +77,7 @@ export class CompareFormComponent implements OnInit {
   }
 
   gKeys(){
-    return this.compareFormGroup.get("rekonCompareKey") as FormArray;
+    return this.compareFormGroup.controls.rekonCompareKey as FormArray;
   }
 
   addMoreKey(){
@@ -83,21 +89,22 @@ export class CompareFormComponent implements OnInit {
   submitResult(){
     this.compareF = new CompareForm();
     this.compareF = this.compareFormGroup.value
+    
     this.service.compareData(this.compareF).subscribe(
-      (res: HttpResponse<ICompareResult>) => this.onCompareSuccess(res.body), 
+      (res: HttpResponse<ICompareResult>) => this.onCompareSuccess(res), 
       (res: HttpErrorResponse) => this.onCompareError(res)
     );
     //console.log(this.compareF);
   }
 
   onCompareSuccess(res){
-
     if(VHelper.responseStatus(res.body)){
-      this.resultData.result = res;
+      this.resultData.result = res.body.response[0];
+      //console.log(this.resultData.result);
       this.router.navigate(["compare-result"]);
     }
     else{
-      alert(res.body['status']);
+      VHelper.ShowLog(res.body["log"]);
     }
     
   }
@@ -107,11 +114,42 @@ export class CompareFormComponent implements OnInit {
     VHelper.ShowHttpError(res);
   }
   removeKey(i){
-    console.log(i)
-    let kys = this.gKeys();
-    kys.removeAt(i);
+    let k = this.gKeys();
+    if(k.length>1){
+      k.removeAt(i);
+    }
   }
   trackByFn(index: any, item: any) {
     return index;
   }
+
+  onInstitute1Change(){
+    let idInstitusi = this.compareFormGroup.get("idInstitusiFrom").value;
+    this.compareFormGroup.get("idServiceFrom").reset(null);
+    this.service.findDbServiceByInstitusi(idInstitusi)
+    .pipe(
+        filter((mayBeOk: HttpResponse<IInstituteSrvc[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IInstituteSrvc[]>) => response.body)
+    ).subscribe(
+      (res: IInstituteSrvc[]) => {
+        this.services1 = res["response"][0]; 
+      }, 
+      (res: HttpErrorResponse) => this.onError(res)
+    );
+  }
+  onInstitute2Change(){
+    let idInstitusi = this.compareFormGroup.get("idInstitusiTo").value;
+    this.compareFormGroup.get("idServiceTo").reset(null);
+    this.service.findDbServiceByInstitusi(idInstitusi)
+    .pipe(
+        filter((mayBeOk: HttpResponse<IInstituteSrvc[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IInstituteSrvc[]>) => response.body)
+    ).subscribe(
+      (res: IInstituteSrvc[]) => {
+        this.services2 = res["response"][0]; 
+      }, 
+      (res: HttpErrorResponse) => this.onError(res)
+    );
+  }
+  
 }

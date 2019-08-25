@@ -16,18 +16,24 @@ export class CompareResultComponent implements OnInit {
     private resultData : ResultData
     ) { }
 
-  result : any;
-  keys : any;
+  result : ICompareResult;
+  resultRekon : any;
+  downloadLink: string;
   ngOnInit() {
     this.result = new CompareResult();
     if(!this.isEmpty()){
-      this.result = this.resultData.result[0];
-      this.keys = Object.assign({}, this.result);
+      
+      this.result = this.resultData.result;
+      this.resultRekon = Object.assign({}, this.result.resultRekon);
+      this.downloadLink =  this.result.downloadLink;
+
+      console.log(this.resultRekon);
+      console.log(this.downloadLink);
       this.keyCleaner();
     }
     
     //this.resultData.result = null;
-    console.log(this.result);
+    //console.log(this.result);
 
   }
 
@@ -36,12 +42,15 @@ export class CompareResultComponent implements OnInit {
   }
   
   keyCleaner(){
-    delete this.keys["name1"];
-    delete this.keys["name2"];
-    delete this.keys["id1"];
-    delete this.keys["id2"];
-    delete this.keys["idInstitusi1"];
-    delete this.keys["idInstitusi2"];
+    console.log(this.resultRekon);
+    if(!this.isEmpty()){
+
+        delete this.resultRekon[0]["id1"];
+        delete this.resultRekon[0]["id2"];
+        delete this.resultRekon[0]["idService1"];
+        delete this.resultRekon[0]["idService2"];
+
+    }
   }
   keyName(keyName): any{
     return keyName.substring(0, keyName.length - 1);
@@ -52,6 +61,6 @@ export class CompareResultComponent implements OnInit {
   }
 
   generateReport(){
-    alert("not yet implemented");
+    //window.open(this.downloadLink, '_blank')
   }
 }

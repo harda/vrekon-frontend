@@ -3,10 +3,11 @@
     <div class="well compare-form-select">
 
         <h4>Compare Data</h4>
+        <div class="row form-group"><div class="col-sm-6">Institusi</div></div>
         
         <div class="row form-group">
             <div class="col-sm-6">
-                <select class="form-control" formControlName="idInstitusiFrom">
+                <select class="form-control" formControlName="idInstitusiFrom" (change)="onInstitute1Change()">
                 <option  *ngFor="let institute of institutes" [value]="institute.id" >
                   {{institute.name}}
                 </option>
@@ -14,9 +15,29 @@
                 
             </div>
             <div class="col-sm-6">
-                <select class="form-control" formControlName="idInstitusiTo">
+                <select class="form-control" formControlName="idInstitusiTo" (change)="onInstitute2Change()">
                 <option  *ngFor="let institute of institutes" [value]="institute.id" >
                     {{institute.name}}
+                </option>
+                </select>
+                
+            </div>
+        </div>
+
+        <div class="row form-group"><div class="col-sm-6">Database Service Setting</div></div>
+        <div class="row form-group">
+            <div class="col-sm-6">
+                <select class="form-control" formControlName="idServiceFrom">
+                <option  *ngFor="let srvc of services1" [value]="srvc.id" >
+                  {{srvc.dbType}}
+                </option>
+                </select>
+                
+            </div>
+            <div class="col-sm-6">
+                <select class="form-control" formControlName="idServiceTo">
+                <option  *ngFor="let srvc of services2" [value]="srvc.id" >
+                    {{srvc.dbType}}
                 </option>
                 </select>
                 
@@ -28,16 +49,17 @@
     <div class="well compare-form-key">
         <h4>
             Compare Key
-        <button (click)="addMoreKey()" class="btn btn-sm btn-success">Tambah</button>
+        <button (click)="addMoreKey()" class="btn btn-xs btn-success">Tambah</button>
         </h4>
-        <div formArrayName="rekonCompareKey"
-            *ngFor="let key of compareFormGroup.get('rekonCompareKey').value; let i = index; trackBy:trackByFn">
+        <div formArrayName="rekonCompareKey">
+            <div *ngFor="let key of gKeys().controls; let i = index; ">
             <div [formGroupName]="i" class="row form-group">
             <div class="col-sm-11">
-                <input class="form-control" type="text" formControlName="keyName" placeholder="Key">
+                <input class="form-control" type="text" formControlName="keyName" placeholder="REF">
             </div>
             <div class="col-sm-1">
                 <a class="text-danger" (click)="removeKey(i)"><fa-icon [icon]="'times'" size="xs"></fa-icon></a>
+            </div>
             </div>
             </div>
         </div>

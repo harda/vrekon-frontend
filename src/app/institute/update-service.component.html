@@ -1,51 +1,53 @@
 <div class="well form-new service">
-    <h3>Database Service Setting <span class="text-primary">{{institute.id}}</span></h3>
+    <h3>Database Service Setting <span class="text-primary">{{institute.name}}</span></h3>
         <form [formGroup]="dbServiceForm" class="form-horizontal">
         <div class="form-group" [ngClass]="{'has-error' : formErrors.dbType }">
                 <label class="control-label" for="dbType">Type</label>
                 <select class="form-control" formControlName="dbType" (change)="onDbTypeChange()">
-                <option  *ngFor="let dbtype of dbTypeOption | keyvalue" [value]="dbtype.key" >
+                <option *ngFor="let dbtype of dbTypeOption | keyvalue" [value]="dbtype.key" >
                         {{dbtype.value}}
                 </option>
                 </select>
                 <span class="help-block" *ngIf="formErrors.dbType">{{formErrors.dbType}}</span>
         </div>
-        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbHost }">
-                <label class="control-label" for="dbHost">Host</label>
-                <input formControlName="dbHost" type="text" id="Host" class="form-control" placeholder="Host"/>
-                <span class="help-block" *ngIf="formErrors.dbHost">{{formErrors.dbHost}}</span>
+        <div *ngIf="checkDbType()=='db'" >
+                <div class="form-group" [ngClass]="{'has-error' : formErrors.dbHost }">
+                        <label class="control-label" for="dbHost">Host</label>
+                        <input formControlName="dbHost" type="text" id="Host" class="form-control" placeholder="Host"/>
+                        <span class="help-block" *ngIf="formErrors.dbHost">{{formErrors.dbHost}}</span>
+                </div>
+                <div class="form-group" [ngClass]="{'has-error' : formErrors.dbUsername }">
+                        <label class="control-label" for="dbUsername">Username</label>
+                        <input formControlName="dbUsername" type="text" id="dbUsername" class="form-control" placeholder="Username"/>
+                        <span class="help-block" *ngIf="formErrors.dbUsername">{{formErrors.dbUsername}}</span>
+                </div>
+                <div class="form-group" [ngClass]="{'has-error' : formErrors.dbPassword }">
+                        <label class="control-label" for="dbPassword">Password</label>
+                        <input formControlName="dbPassword" type="password" id="dbPassword" class="form-control" placeholder="Password"/>
+                        <span class="help-block" *ngIf="formErrors.dbPassword">{{formErrors.dbPassword}}</span>
+                </div>
+                <div class="form-group" [ngClass]="{'has-error' : formErrors.dbName }">
+                        <label class="control-label" for="dbName">Database Name</label>
+                        <input formControlName="dbName" type="text" id="dbName" class="form-control" placeholder="Database Name"/>
+                        <span class="help-block" *ngIf="formErrors.dbName">{{formErrors.dbName}}</span>
+                </div>
+                <!-- <div class="form-group" [ngClass]="{'has-error' : formErrors.dbTableName }">
+                        <label class="control-label" for="dbTableName">Tablename</label>
+                        <input formControlName="dbTableName" type="text" id="dbTableName" class="form-control" placeholder="Status"/>
+                        <span class="help-block" *ngIf="formErrors.dbTableName">{{formErrors.dbTableName}}</span>
+                </div>
+                <div class="form-group" [ngClass]="{'has-error' : formErrors.status }">
+                        <label class="control-label" for="status">Status</label>
+                        <select class="form-control" formControlName="status" >
+                        <option  *ngFor="let statusOption of serviceStatusOption | keyvalue" [value]="statusOption.key" >
+                                {{statusOption.value}}
+                        </option>
+                        </select>
+                        
+                        <span class="help-block" *ngIf="formErrors.status">{{formErrors.status}}</span>
+                </div> -->
         </div>
-        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbName }">
-                <label class="control-label" for="dbName">Database Name</label>
-                <input formControlName="dbName" type="text" id="dbName" class="form-control" placeholder="Database Name"/>
-                <span class="help-block" *ngIf="formErrors.dbName">{{formErrors.dbName}}</span>
-        </div>
-        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbUsername }">
-                <label class="control-label" for="dbUsername">Username</label>
-                <input formControlName="dbUsername" type="text" id="dbUsername" class="form-control" placeholder="Username"/>
-                <span class="help-block" *ngIf="formErrors.dbUsername">{{formErrors.dbUsername}}</span>
-        </div>
-        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbPassword }">
-                <label class="control-label" for="dbPassword">Password</label>
-                <input formControlName="dbPassword" type="password" id="dbPassword" class="form-control" placeholder="Password"/>
-                <span class="help-block" *ngIf="formErrors.dbPassword">{{formErrors.dbPassword}}</span>
-        </div>
-        <div class="form-group" [ngClass]="{'has-error' : formErrors.dbTableName }">
-                <label class="control-label" for="dbTableName">Tablename</label>
-                <input formControlName="dbTableName" type="text" id="dbTableName" class="form-control" placeholder="Status"/>
-                <span class="help-block" *ngIf="formErrors.dbTableName">{{formErrors.dbTableName}}</span>
-        </div>
-        <div class="form-group" [ngClass]="{'has-error' : formErrors.status }">
-                <label class="control-label" for="status">Status</label>
-                <select class="form-control" formControlName="status" >
-                <option  *ngFor="let statusOption of serviceStatusOption | keyvalue" [value]="statusOption.key" >
-                        {{statusOption.value}}
-                </option>
-                </select>
-                
-                <span class="help-block" *ngIf="formErrors.status">{{formErrors.status}}</span>
-        </div>
-        <div class="form-group" *ngIf="checkDbType()">
+        <div class="form-group" *ngIf="checkDbType()=='file'">
                 <label for="file">File</label><br>
                 <label id="file" class="btn btn-default btn-file form-control">
                         {{checkFileName()}}
@@ -54,12 +56,45 @@
                         id="file"
                         class="form-control"
                         style="display: none;"
+                        
+                        accept="{{ getFileType() }}"
                         (change)="handleFileInput($event.target.files)" />
                         <!-- <input class="" type="text" disabled value="{{checkFileName()}}"/>  -->
                        
                 </label>
                 
         </div>
+        <hr>
+        <div class="translate-form" *ngIf="true">
+                <h4>
+                    Translate Field
+                <button (click)="addMoreTranslate()" class="btn btn-xs btn-success">Tambah</button>
+                </h4>
+                <div class="translate-label" *ngIf="gTranslates().controls.length > 0">
+                        <div class="col-sm-5">
+                                <label>Origin Translate Table</label>
+                        </div>
+                        <div class="col-sm-5">
+                                <label>Target Translate Table</label>
+                        </div>
+                </div>
+                <div formArrayName="dbTranslates">
+                <div *ngFor="let key of gTranslates().controls; let i = index;">
+                    <div [formGroupName]="i" class="row form-group">
+                    <div class="col-sm-5">
+                        <input class="form-control" type="text" formControlName="originTableName" placeholder="origin">
+                    </div>
+                    <div class="col-sm-5">
+                        <input class="form-control" type="text" formControlName="targetTableName" placeholder="target">
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="text-danger" (click)="removeTranslateForm(i)"><fa-icon [icon]="'times'" size="xs"></fa-icon></a>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <hr>
         <div class="form-group">
                 <button class="btn btn-default btn-md pull-left" type="button" (click)="previousState()" [disabled]="isUpdating">Back</button>
                 <button class="btn btn-primary btn-md pull-right" type="button" (click)="onSubmit()" [disabled]="isUpdating">Submit</button>

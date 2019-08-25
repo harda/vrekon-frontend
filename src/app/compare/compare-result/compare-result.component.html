@@ -6,22 +6,24 @@
         <thead>
             <tr>
                 <th>compareKey</th>
-                <th>{{result.name1}}</th>
-                <th>{{result.name2}}</th>
+                <th>1</th>
+                <th>2</th>
             </tr>
         </thead>
         <tbody>
         
-        <tr *ngFor="let item of keys | keyvalue">
+        <tr *ngFor="let item of resultRekon[0] | keyvalue">
 
             <td *ngIf="item.key.endsWith('1')">{{ keyName(item.key) }}</td>
-            <td *ngIf="item.key.endsWith('1')">{{ result[item.key] }}</td>
-            <td *ngIf="item.key.endsWith('1')">{{ result[item.key.slice(0,-1)+"2"] }}</td>
+            <td *ngIf="item.key.endsWith('1')">{{ resultRekon[0][item.key] }}</td>
+            <td *ngIf="item.key.endsWith('1')">{{ resultRekon[0][item.key.slice(0,-1)+"2"] }}</td>
         </tr>
         
         </tbody>
     </table>
     <br>
     <button class="btn btn-default btn-sm" (click)="previousState()">Back</button>
-    <button class="btn btn-primary btn-sm pull-right" (click)="generateReport()" [hidden]="isEmpty()">Generate Report</button>
+    <!-- <button class="btn btn-primary btn-sm pull-right" (click)="generateReport()" [hidden]="isEmpty()">Generate Report</button> -->
+
+    <a class="btn btn-primary btn-sm pull-right" href="{{ downloadLink }}" target="_blank" [hidden]="isEmpty()" >Generate Report</a>
 </div>

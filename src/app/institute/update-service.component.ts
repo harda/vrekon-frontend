@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { IInstituteSrvc, InstituteSrvc } from '../shared/model/instituteSrvc.model';
 import { IInstitute, Institute } from '../shared/model/institute.model';
-import { FormGroup,FormBuilder, Validators } from '@angular/forms';
+import { FormGroup,FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { VrekonService } from "./vrekon.service";
 import { IDbSrvc, DbSrvc } from '../shared/model/dbSrvc.model';
@@ -79,18 +79,27 @@ export class UpdateServiceComponent implements OnInit {
         //this.institute = institute;
         this.dbService.dbSetting = new InstituteSrvc();
         this.dbService.dbSetting.idInstitusi = this.institute.id;  
-        
       }
       else{
+        
         this.isNewRecord = false;
-        this.dbService.dbSetting = dbService
+        this.dbService.dbSetting = dbService["response"][0];
+        //this.dbService.dbTranslates = [null];
+        
         this.institute = new Institute();
         this.institute.id = dbService.idInstitusi;
-        this.dbServiceForm.setValue(dbService);
+        console.log(this.dbService.dbSetting);
+        
+
+        this.gTranslates().clear()
+        this.dbService.dbSetting.dbTranslates.forEach(trans => {
+          this.gTranslates().push(this.createTranslateForm(trans))
+        });
+        this.dbServiceForm.setValue(this.dbService.dbSetting);
         
       }
 
-      this.dbService.dbTranslates = [new InstituteTranslate()];
+      //this.dbService.dbTranslates = [new InstituteTranslate()];
       
     });
     
@@ -106,19 +115,43 @@ export class UpdateServiceComponent implements OnInit {
     this.dbServiceForm = this.fb.group({
       id:[""],
       idInstitusi:[""],
-      dbType:["DB",[Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
-      dbHost:["a",Validators.required],
-      dbName:["a",Validators.required],
-      dbUsername:["a",Validators.required],
-      dbPassword:["a",Validators.required],
-      dbTableName:["a",Validators.required],
-      status:["Empty",Validators.required]
+      dbType:["",[Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
+      dbHost:[""],
+      dbName:[""],
+      dbUsername:[""],
+      dbPassword:[""],
+      dbTableName:[""],
+      status:["Empty",Validators.required],
+      dbTranslates: this.fb.array([])
     });
+    //this.trasnlateForm = this.fb.group({})
+
+
 
     //if used onChangeEvent
     // this.newServiceForm.valueChanges.subscribe( (data:any) => {
     //   this.formValidation(this.newServiceForm);
     // })
+  }
+
+  createTranslateForm(trans : IInstituteTranslate){
+    if(trans==null){
+      return this.fb.group({
+        "id":[""],
+        "idService":[""],
+        "originTableName":["",Validators.required],
+        "targetTableName":["",Validators.required]
+      });
+    }
+    else{
+      return this.fb.group({
+        "id":[trans.id],
+        "idService":[trans.idService],
+        "originTableName":[trans.originTableName,Validators.required],
+        "targetTableName":[trans.targetTableName,Validators.required]
+      });
+    }
+    
   }
 
   formValidation(group: FormGroup = this.dbServiceForm): any{
@@ -167,9 +200,12 @@ export class UpdateServiceComponent implements OnInit {
   checkDbType(){
     const dbType = this.dbServiceForm.get("dbType").value;
     if(dbType === "text" || dbType === "excel"){
-      return true;
+      return "file";
     }
-    return false;
+    if(dbType === "mysql" || dbType === "oracle"){
+      return "db";
+    }
+    return "";
   }
   
   onDbTypeChange(){
@@ -178,9 +214,22 @@ export class UpdateServiceComponent implements OnInit {
   onSubmit(): void {
     let errCount = this.formValidation(this.dbServiceForm)
     if( errCount == 0 ){
-      this.isUpdating = true;
       this.dbService.dbSetting = this.dbServiceForm.value;
+      console.log(this.dbService.dbSetting.dbTranslates);
       this.dbService.dbSetting.idInstitusi = this.institute.id;
+      // if(this.gTranslates().length <= 1){
+      //   let tr = this.gTranslates().value[0];
+
+      //   if(tr["originTableName"] === "" && tr["targetTableName"] === "" ){
+      //     this.dbService.dbSetting.dbTranslates = [];
+      //   }
+      //   else{
+          
+      //   }
+      // }
+      this.dbService.dbTranslates =  this.dbService.dbSetting.dbTranslates;
+
+      this.isUpdating = true;
       if(this.isNewRecord){
         this.service.createDbService(this.dbService,this.fileToUpload)
         .subscribe(
@@ -189,7 +238,7 @@ export class UpdateServiceComponent implements OnInit {
         );
       }
       else{
-        this.service.updateDbService(this.dbService)
+        this.service.updateDbService(this.dbService,this.fileToUpload)
         .subscribe(
             (res: HttpResponse<IDbSrvc>) => this.onUpdateServiceSuccess(res), 
             (res: HttpErrorResponse) => this.onUpdateServiceError(res)
@@ -207,7 +256,9 @@ export class UpdateServiceComponent implements OnInit {
       this.previousState();
     }
     else{
-      alert(res.body['status']);
+      this.isUpdating=false
+      console.log(res);
+      VHelper.ShowLog(res.body["log"]);
     }
     
   }
@@ -215,5 +266,33 @@ export class UpdateServiceComponent implements OnInit {
     
     VHelper.ShowHttpError(res);
     this.isUpdating=false
+  }
+  gTranslates(){
+    return this.dbServiceForm.get("dbTranslates") as FormArray;
+  }
+
+  addMoreTranslate(){
+    let t = this.gTranslates();
+    t.push(this.createTranslateForm(null));
+  }
+  trackByFn(index: any, item: any) {
+    return index;
+  }
+  removeTranslateForm(i){
+    let t = this.gTranslates();
+    //if(t.length>1){
+      t.removeAt(i);
+    //}
+    
+  }
+
+  getFileType(){
+    const dbType = this.dbServiceForm.get("dbType").value;
+    if(dbType === "excel"){
+      return " .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel";
+    }
+    if(dbType === "text" ){
+      return "text/plain, text/html";
+    }
   }
 }

@@ -36,12 +36,17 @@ export class VrekonService {
   findInstitute(model: IInstitute): Observable<EntityResponseType> {
     return this.http.post<IInstitute>(this.API_URL+"/institusi-find", model, { observe: 'response' });
   }
-  findDbService(model: IInstitute): Observable<HttpResponse<IDbSrvc>> {
-    return this.http.post<IDbSrvc>(this.API_URL+"/db-service", model, { observe: 'response' });
+  findDbService(model: IDbSrvc): Observable<HttpResponse<IDbSrvc>> {
+    return this.http.post<IDbSrvc>(this.API_URL+"/db-service-by-id", model, { observe: 'response' });
+  }
+
+  findDbServiceByInstitusi(idInstitute: number): Observable<HttpResponse<IDbSrvc[]>> {
+    return this.http.post<IDbSrvc[]>(this.API_URL+"/db-service-by-id-institusi", {"id":idInstitute}, { observe: 'response' });
   }
 
   createDbService(model: IDbSrvc, file: File) : Observable<HttpResponse<IDbSrvc>> {
     let input = new FormData();
+    model.dbSetting.dbTranslates = null;
     input.append('json',JSON.stringify(model));
     if(file !== null){
       input.append('files', file , file.name);
@@ -52,10 +57,25 @@ export class VrekonService {
     return this.http.post<IDbSrvc>(this.API_URL+"/db-service-tambah", input, { observe: 'response' });//.pipe(map((resp: any) => resp));
     //return this.http.post<IDbSrvc>(this.API_URL+"/db-service-tambah", model, { observe: 'response' });
   }
-  updateDbService(model: IDbSrvc) : Observable<HttpResponse<IDbSrvc>> {
-    return this.http.post<IDbSrvc>(this.API_URL+"/db-service-ubah", model, { observe: 'response' });
+  updateDbService(model: IDbSrvc, file:File) : Observable<HttpResponse<any>> {
+    let input = new FormData();
+    model.dbSetting.dbTranslates = null;
+    input.append('json',JSON.stringify(model));
+    if(file !== null){
+      input.append('files', file , file.name);
+    }
+    else{
+      input.append('files',null);
+    }
+    return this.http.post<IDbSrvc>(this.API_URL+"/db-service-ubah", input, { observe: 'response' });
   }
   
+  copyDbService(id: number) : Observable<HttpResponse<any>> {
+      return this.http.post<any>(this.API_URL+"/db-copy-start", {"id":id}, { observe: 'response' });
+  }
+  clearTempDbService(id: number) : Observable<HttpResponse<IDbSrvc>> {
+    return this.http.post<any>(this.API_URL+"/db-clear-tmp-service", {"id":id}, { observe: 'response' });
+  }
 
   compareData(model: ICompareForm) : Observable<HttpResponse<ICompareResult>> {
     return this.http.post<ICompareResult>(this.API_URL+"/compare-data", model, { observe: 'response' });

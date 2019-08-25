@@ -5,15 +5,16 @@
         <form [formGroup]="newInstituteForm"  class="form-horizontal">
         <div class="row form-group">
             <div class="col-sm-5">
-                <label class="control-label" for="institusiTabel">No</label><br>
-                <input formControlName="institusiTabel" type="text" id="institusiTabel" class="form-control"/>
+                <!-- <label class="control-label" for="institusiTabel">institusi Tabel</label><br> -->
+                <input formControlName="institusiTabel" type="text" id="institusiTabel" class="form-control" placeholder="Institusi No"/>
             </div>
             <div class="col-sm-5">
-                <label class="control-label" for="institusiName">Name</label><br>
-                <input formControlName="name" type="text" id="institusiName" class="form-control"/>
+                <!-- <label class="control-label" for="institusiName">Name</label><br> -->
+                <input formControlName="name" type="text" id="institusiName" class="form-control" placeholder="Institusi Name"/>
             </div>
-            <div class="col-sm-2"><br>
-                <button class="btn btn-primary btn-md pull right" type="button" (click)="addInstitute()" [disabled]="isUpdating">Submit</button>
+            <div class="col-sm-2">
+                <!-- <br> -->
+                <button class="btn btn-primary btn-md pull right" type="button" (click)="addInstitute()" [disabled]="isUpdating" >Submit</button>
             </div>
         </div>
         </form>
@@ -46,24 +47,33 @@
                         <div class="col-sm-3 " *ngFor="let srvc of institute.institusiService;">
                             <div class="panel panel-{{serviceColor[srvc.status]}}">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        {{ srvc.dbName }}
-                                    </h3>
+                                    <div class="btn-toolbar pull-right">
+                                        <button type="submit"
+                                            [routerLink]="['/setup-service', srvc.id, 'update-service']"
+                                            class="btn btn-success btn-xs" [disabled]="isUpdating">
+                                            <fa-icon [icon]="'pencil-alt'" size="xs"></fa-icon>
+                                        </button>
+                                        <button class="btn btn-danger btn-xs" type="button" (click)="deleteService(srvc.id)" [disabled]="isUpdating">
+                                            <fa-icon [icon]="'times'" size="xs"></fa-icon>
+                                        </button>
+                                        </div>
+
+                                    <br>
                                 </div>
                                 <div class="panel-body bg-{{serviceColor[srvc.status]}}">
+                                    Service : {{ srvc.dbType }} <br>
                                     Status : {{ srvc.status }}
+                                    <br>
+                                    <button class="btn btn-sm btn-primary" *ngIf="srvc.status == 'Ready'" (click)="dbClearTmpService(srvc.id)">
+                                        Delete Temp DB
+                                    </button>
+                                    
+                                    <button class="btn btn-sm btn-primary" *ngIf="srvc.status == 'Empty'" (click)="dbCopyStart(srvc.id)">
+                                        Start Copy DB
+                                    </button>
                                 </div>
                                 <div class="panel-footer">
-                                    <div class="btn-toolbar">
-                                    <button type="submit"
-                                        [routerLink]="['/setup-service', institute.id, 'update-service']"
-                                        class="btn btn-success btn-xs" [disabled]="isUpdating">
-                                        <fa-icon [icon]="'pencil-alt'" size="xs"></fa-icon>
-                                    </button>
-                                    <button class="btn btn-danger btn-xs" type="button" (click)="deleteService(srvc.id)" [disabled]="isUpdating">
-                                        <fa-icon [icon]="'times'" size="xs"></fa-icon>
-                                    </button>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
