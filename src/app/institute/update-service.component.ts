@@ -215,7 +215,7 @@ export class UpdateServiceComponent implements OnInit {
     let errCount = this.formValidation(this.dbServiceForm)
     if( errCount == 0 ){
       this.dbService.dbSetting = this.dbServiceForm.value;
-      console.log(this.dbService.dbSetting.dbTranslates);
+      //console.log(this.dbService.dbSetting.dbTranslates);
       this.dbService.dbSetting.idInstitusi = this.institute.id;
       // if(this.gTranslates().length <= 1){
       //   let tr = this.gTranslates().value[0];
@@ -257,7 +257,6 @@ export class UpdateServiceComponent implements OnInit {
     }
     else{
       this.isUpdating=false
-      console.log(res);
       VHelper.ShowLog(res.body["log"]);
     }
     

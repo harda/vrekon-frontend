@@ -24,7 +24,13 @@ export class CompareResultComponent implements OnInit {
     if(!this.isEmpty()){
       
       this.result = this.resultData.result;
-      this.resultRekon = Object.assign({}, this.result.resultRekon);
+      if(this.result.resultRekon != []){
+        this.resultRekon = Object.assign({}, this.result.resultRekon);
+      }
+      else{
+        this.resultRekon = [];
+      }
+      
       this.downloadLink =  this.result.downloadLink;
 
       console.log(this.resultRekon);
@@ -42,15 +48,23 @@ export class CompareResultComponent implements OnInit {
   }
   
   keyCleaner(){
-    console.log(this.resultRekon);
-    if(!this.isEmpty()){
-
-        delete this.resultRekon[0]["id1"];
-        delete this.resultRekon[0]["id2"];
-        delete this.resultRekon[0]["idService1"];
-        delete this.resultRekon[0]["idService2"];
-
+    if(this.resultRekon != null){ 
+      // this.resultRekon.forEach(rslt => {
+      //   delete rslt["id1"];
+      //   delete rslt["id2"];
+      //   delete rslt["idService1"];
+      //   delete rslt["idService2"];
+        
+      // });
     }
+    // if(!this.isEmpty()){
+
+    //     delete this.resultRekon[0]["id1"];
+    //     delete this.resultRekon[0]["id2"];
+    //     delete this.resultRekon[0]["idService1"];
+    //     delete this.resultRekon[0]["idService2"];
+
+    // }
   }
   keyName(keyName): any{
     return keyName.substring(0, keyName.length - 1);
@@ -59,6 +73,7 @@ export class CompareResultComponent implements OnInit {
   isEmpty(){
     return (this.resultData.result == null);
   }
+  
 
   generateReport(){
     //window.open(this.downloadLink, '_blank')

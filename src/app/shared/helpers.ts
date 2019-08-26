@@ -6,6 +6,9 @@ export class VHelper {
         if(data["log"][0]["status"] == "Success"){
             return true;
         }
+        if(data["log"][0]["status"] == "success"){
+            return true;
+        }
         return false;
     }
     public static ShowLog(logs : IResponseLog[]): void { 

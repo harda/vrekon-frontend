@@ -47,12 +47,16 @@ export class VrekonService {
   createDbService(model: IDbSrvc, file: File) : Observable<HttpResponse<IDbSrvc>> {
     let input = new FormData();
     model.dbSetting.dbTranslates = null;
+    delete model.dbSetting.dbTranslates;
     input.append('json',JSON.stringify(model));
     if(file !== null){
+
+      console.log("with file");
       input.append('files', file , file.name);
     }
     else{
-      input.append('files',null);
+      console.log("without file");
+      //input.append('files',null);
     }
     return this.http.post<IDbSrvc>(this.API_URL+"/db-service-tambah", input, { observe: 'response' });//.pipe(map((resp: any) => resp));
     //return this.http.post<IDbSrvc>(this.API_URL+"/db-service-tambah", model, { observe: 'response' });
@@ -60,18 +64,19 @@ export class VrekonService {
   updateDbService(model: IDbSrvc, file:File) : Observable<HttpResponse<any>> {
     let input = new FormData();
     model.dbSetting.dbTranslates = null;
+    delete model.dbSetting.dbTranslates;
     input.append('json',JSON.stringify(model));
     if(file !== null){
       input.append('files', file , file.name);
     }
     else{
-      input.append('files',null);
+      //input.append('files',file);
     }
     return this.http.post<IDbSrvc>(this.API_URL+"/db-service-ubah", input, { observe: 'response' });
   }
   
   copyDbService(id: number) : Observable<HttpResponse<any>> {
-      return this.http.post<any>(this.API_URL+"/db-copy-start", {"id":id}, { observe: 'response' });
+      return this.http.post<any>(this.API_URL+"/db-copy-start", {"idService":id}, { observe: 'response' });
   }
   clearTempDbService(id: number) : Observable<HttpResponse<IDbSrvc>> {
     return this.http.post<any>(this.API_URL+"/db-clear-tmp-service", {"id":id}, { observe: 'response' });
