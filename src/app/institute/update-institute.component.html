@@ -1,7 +1,8 @@
 <div class="well new-institute-form">
+    
+    <form [formGroup]="instituteForm" class="form-horizontal card card-body bg-light m-1">
     <h3>Institute</h3>
-    <form [formGroup]="instituteForm" class="form-horizontal">
-    <div class="row form-group">
+    <div class="row form-group ">
         <div class="col-sm-6">
             <label class="control-label" for="institusiTabel">Institute Table</label><br>
             <input formControlName="institusiTabel" type="text" id="institusiTabel" class="form-control"/>
@@ -11,9 +12,10 @@
             <input formControlName="name" type="text" id="institusiName" class="form-control"/>
         </div>
     </div>
-    <div class="row form-group">
-        <button class="btn btn-primary btn-md pull-right" type="button" (click)="updateInstitute()" [disabled]="isUpdating">Submit</button>
-        <button class="btn btn-default btn-md pull-left" type="button" (click)="previousState()">Back</button>
+    <div class="form-group ">
+        
+        <button class="btn btn-dark btn-sm float-left" (click)="previousState()">Back</button>
+        <button class="btn btn-primary btn-sm float-right" (click)="updateInstitute()" [disabled]="isUpdating">Submit</button>
     </div>
     </form>
 

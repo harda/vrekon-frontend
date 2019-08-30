@@ -1,5 +1,5 @@
 <div class="" >
-    <div class="well new-institute-form">
+    <div class="card card-body bg-light new-institute-form mt-2 mb-2">
 
         <h4>Tambah Institusi</h4>
         <form [formGroup]="newInstituteForm"  class="form-horizontal">
@@ -23,57 +23,64 @@
     <table class="table table-bordered table-stripped">
         <tr  *ngFor="let institute of institutes; let i = index">
             <td>
-                <div class="well well-warning">
-                    <div class="row">
-
+                <div class="card card-body bg-light">
+                    <div class="row m-2">
+                        <div class="float-sm-left mr-2">
                         {{ i+1 }}.
                         {{institute.name }}  
-                        <div class="btn-group pull-right">
+                        </div>
+                        <div class="">
                             <button type="submit"
                                 [routerLink]="['/setup-service', institute.id, 'create-service']"
-                                class="btn btn-success btn-sm" [disabled]="isUpdating">
+                                class="btn btn-success btn-sm mr-1 float-rig" [disabled]="isUpdating">
                                 <span class="d-none d-md-inline">Tambah</span>
                             </button>
                             <button type="submit"
                                 [routerLink]="['/setup-service', institute.id, 'update']"
-                                class="btn btn-warning btn-sm" [disabled]="isUpdating">
+                                class="btn btn-warning btn-sm mr-1" [disabled]="isUpdating">
                                 <span class="d-none d-md-inline">Ubah</span>
                             </button>
-                            <button class="btn btn-sm btn-danger" (click)="deleteInstitute(institute.id)" [disabled]="isUpdating">Hapus</button>
+                            <button class="btn btn-sm btn-danger mr-1" (click)="openDeleteInstituteModal(institute)" [disabled]="isUpdating">Hapus</button>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-sm-3 " *ngFor="let srvc of institute.institusiService;">
-                            <div class="panel panel-{{serviceColor[srvc.status]}}">
-                                <div class="panel-heading">
-                                    <div class="btn-toolbar pull-right">
-                                        <button type="submit"
+                            <div class="card card-{{serviceColor[srvc.status]}}" style="font-size: 14px;">
+                                <div class="card-heading">
+                                    <div class="btn-toolbar float-right">
+                                        <!-- <button type="submit"
                                             [routerLink]="['/setup-service', srvc.id, 'update-service']"
-                                            class="btn btn-success btn-xs" [disabled]="isUpdating">
-                                            <fa-icon [icon]="'pencil-alt'" size="xs"></fa-icon>
-                                        </button>
-                                        <button class="btn btn-danger btn-xs" type="button" (click)="deleteService(srvc.id)" [disabled]="isUpdating">
-                                            <fa-icon [icon]="'times'" size="xs"></fa-icon>
-                                        </button>
+                                            class="btn btn-success btn-xs" [disabled]="isUpdating"> -->
+                                            <fa-icon 
+                                            class="text-success mr-1"
+                                            [routerLink]="['/setup-service', srvc.id, 'update-service']"    
+                                            [icon]="'pencil-alt'" size="xs"></fa-icon>
+                                        <!-- </button> -->
+                                        
+                                        <!-- <button class="btn btn-danger btn-xs" type="button" (click)="deleteService(srvc.id)" [disabled]="isUpdating"> -->
+                                            <!-- <fa-icon class="text-danger mr-1" [icon]="'times'" size="xs" (click)="deleteService(srvc.id)" [disabled]="isUpdating"></fa-icon> -->
+                                            <fa-icon class="text-danger mr-1" [icon]="'times'" size="xs" (click)="openDeleteServiceModal(srvc,institute)" [disabled]="isUpdating"></fa-icon>
+                                        <!-- </button> -->
                                         </div>
 
                                     <br>
                                 </div>
-                                <div class="panel-body bg-{{serviceColor[srvc.status]}}">
+                                <div class="card-body bg-{{serviceColor[srvc.status]}} ">
+                                    <div class="">
                                     Service : {{ srvc.dbType }} <br>
                                     Status : {{ srvc.status }}
-                                    <br>
-                                    <button class="btn btn-sm btn-primary" *ngIf="srvc.status == 'Ready'" (click)="dbClearTmpService(srvc.id)">
+                                    </div>
+                                    
+                                </div>
+                                <div class="card-footer d-flex justify-content-center" >
+                                    <button style="font-size: 12px;" class="btn btn-sm btn-warning d-flex justify-content-center" *ngIf="srvc.status == 'Ready'" (click)="dbClearTmpService(srvc.id)">
                                         Delete Temp DB
                                     </button>
                                     
-                                    <button class="btn btn-sm btn-primary" *ngIf="srvc.status == 'Empty'" (click)="dbCopyStart(srvc.id)">
+                                    <button style="font-size: 12px;" class="btn btn-sm btn-primary d-flex justify-content-center" *ngIf="srvc.status == 'Empty'" (click)="dbCopyStart(srvc.id)">
                                         Start Copy DB
                                     </button>
-                                </div>
-                                <div class="panel-footer">
-                                    
                                 </div>
                             </div>
                         </div>

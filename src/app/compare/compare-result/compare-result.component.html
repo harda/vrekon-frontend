@@ -1,29 +1,73 @@
 
-<div class="well container-fluid">
+<div class="card card-body bg-light mt-2">
     
-    <h3> RESULT </h3>
-    <table class="table table-bordered table-condensed table-striped" [hidden]="isEmpty()">
-        <thead>
-            <tr>
-                <th>compareKey</th>
-                <th>1</th>
-                <th>2</th>
-            </tr>
-        </thead>
-        <tbody>
-        
-        <tr *ngFor="let item of resultRekon[0] | keyvalue">
-
-            <td *ngIf="item.key.endsWith('1')">{{ keyName(item.key) }}</td>
-            <td *ngIf="item.key.endsWith('1')">{{ resultRekon[0][item.key] }}</td>
-            <td *ngIf="item.key.endsWith('1')">{{ resultRekon[0][item.key.slice(0,-1)+"2"] }}</td>
-        </tr>
-        
-        </tbody>
-    </table>
-    <br>
-    <button class="btn btn-default btn-sm" (click)="previousState()">Back</button>
+    <div class="form-group" [hidden]="isEmpty()">
+    <button class="btn btn-dark btn-sm float-left" (click)="previousState()">Back</button>
     <!-- <button class="btn btn-primary btn-sm pull-right" (click)="generateReport()" [hidden]="isEmpty()">Generate Report</button> -->
 
-    <a class="btn btn-primary btn-sm pull-right" href="{{ downloadLink }}" target="_blank" [hidden]="isEmpty()" >Generate Report</a>
+    <a class="btn btn-primary btn-sm float-right" href="{{ downloadLink }}" target="_blank" [hidden]="isEmpty()" >Generate Report</a>
+    </div>
+    
+    <h3> RESULT </h3>
+    <div class="row">
+        <div class="col-sm-6">
+            <table class="table table-sm table-bordered table-condensed table-striped" [hidden]="isEmpty()">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <ng-container *ngFor="let item of resultRekon[0] | keyvalue">
+                            <th *ngIf="checkKeyRow(item.key,1)">
+                                    {{ keyName(item.key) }}
+                            </th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let rr of resultRekon | keyvalue ; let i = index">
+                        <tr [className]="getStatusClass(rr.value['status'])">
+                            <td>{{i + 1}}</td>
+                            <ng-container *ngFor="let item of rr.value | keyvalue">
+                                <td *ngIf="checkKeyRow(item.key,1)">
+                                        {{ item.value }}
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <table class="table table-sm table-bordered table-condensed table-striped" [hidden]="isEmpty()">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <ng-container *ngFor="let item of resultRekon[0] | keyvalue">
+                            <th *ngIf="checkKeyRow(item.key,2)">
+                                    {{ keyName(item.key) }}
+                            </th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let rr of resultRekon | keyvalue ; let i = index">
+                        <tr [className]="getStatusClass(rr.value['status'])">
+                            <td>{{ i + 1}}</td>
+                            <ng-container *ngFor="let item of rr.value | keyvalue">
+                                <td *ngIf="checkKeyRow(item.key,2)">
+                                        {{ item.value }}
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </ng-container>
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group">
+    <button class="btn btn-dark btn-sm float-left" (click)="previousState()">Back</button>
+    <!-- <button class="btn btn-primary btn-sm pull-right" (click)="generateReport()" [hidden]="isEmpty()">Generate Report</button> -->
+
+    <a class="btn btn-primary btn-sm float-right" href="{{ downloadLink }}" target="_blank" [hidden]="isEmpty()" >Generate Report</a>
+    </div>
 </div>

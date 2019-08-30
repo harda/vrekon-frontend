@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ICompareResult, CompareResult } from 'src/app/shared/model/compareResult.model';
 
 import { ResultData } from '../../providers/result-data'
+import { SpinnerService } from 'src/app/providers/spinner';
 @Component({
   selector: 'app-compare-result',
   templateUrl: './compare-result.component.html',
@@ -13,68 +14,65 @@ export class CompareResultComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private resultData : ResultData
+    private resultData : ResultData,
+    private spinnerService : SpinnerService
     ) { }
 
   result : ICompareResult;
   resultRekon : any;
   downloadLink: string;
+
   ngOnInit() {
     this.result = new CompareResult();
-    if(!this.isEmpty()){
+    this.resultRekon = [];
+    
+    if(this.resultData.result != null){
       
-      this.result = this.resultData.result;
+       this.result = this.resultData.result;
       if(this.result.resultRekon != []){
         this.resultRekon = Object.assign({}, this.result.resultRekon);
-      }
-      else{
-        this.resultRekon = [];
       }
       
       this.downloadLink =  this.result.downloadLink;
 
-      console.log(this.resultRekon);
-      console.log(this.downloadLink);
-      this.keyCleaner();
+     //console.log(this.resultRekon);
+      // console.log(this.downloadLink);
     }
+    this.spinnerService.hide();
     
-    //this.resultData.result = null;
-    //console.log(this.result);
-
   }
 
   previousState(){
     window.history.back();
   }
   
-  keyCleaner(){
-    if(this.resultRekon != null){ 
-      // this.resultRekon.forEach(rslt => {
-      //   delete rslt["id1"];
-      //   delete rslt["id2"];
-      //   delete rslt["idService1"];
-      //   delete rslt["idService2"];
-        
-      // });
-    }
-    // if(!this.isEmpty()){
-
-    //     delete this.resultRekon[0]["id1"];
-    //     delete this.resultRekon[0]["id2"];
-    //     delete this.resultRekon[0]["idService1"];
-    //     delete this.resultRekon[0]["idService2"];
-
-    // }
-  }
   keyName(keyName): any{
     return keyName.substring(0, keyName.length - 1);
   }
   
   isEmpty(){
-    return (this.resultData.result == null);
+    return (this.resultRekon.length == 0);
   }
-  
+  checkKeyRow(rowText,num:number) : boolean{
 
+    if(
+      rowText.endsWith(num.toString())
+      && ( rowText !== "idService1" )
+      && ( rowText !== "idService2" )
+      && ( rowText !== "id1" )
+      && ( rowText !== "id2" )
+      && ( rowText !== "status" )
+    ){
+      
+      return true;
+    }
+    
+
+    return false;
+  }
+  getStatusClass(status) : string{
+    return (status == 'unmatch' ? 'bg-danger' : '' )
+  }
   generateReport(){
     //window.open(this.downloadLink, '_blank')
   }

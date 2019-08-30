@@ -209,6 +209,7 @@ export class UpdateServiceComponent implements OnInit {
   }
   
   onDbTypeChange(){
+    this.fileToUpload
     this.fileToUpload = null;
   }
   onSubmit(): void {

@@ -13,8 +13,11 @@ import { RouteSharedModule } from './shared/route-shared.module';
 //module
 import { InstituteModule } from './institute/institute.module';
 import { CompareModule } from './compare/compare.module';
+import { SpinnerModule } from './providers/spinner/spinner.module';
 //providers
 import { ResultData } from './providers/result-data';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,13 +30,15 @@ import { ResultData } from './providers/result-data';
     AppRoutingModule,
     RouteSharedModule,
     AppSharedModule.forRoot(),
-    
+
 
     //internal module
     InstituteModule,
     CompareModule,
 
     //other module
+
+    SpinnerModule,
     HttpClientModule,
 
   ],

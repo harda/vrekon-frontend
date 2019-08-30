@@ -1,5 +1,5 @@
 <div class="container">
-<nav class="navbar navbar-default navbar-expand-md">
+<!-- <nav class="navbar navbar-default navbar-expand-md">
     <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" routerLink="">
@@ -18,8 +18,30 @@
       <a routerLinkActive="active" routerLink="login">Logout</a>
     </li>
   </ul>
+  
 </div>
-</nav>
-
+</nav> -->
+<nav class="navbar navbar-light navbar-expand-md bg-light">
+    <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" routerLink="">
+            REKON
+          </a>
+        </div>
+    <!-- Links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" routerLink="setup-service">Setup Service</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" routerLink="setup-rekon">Setup Rekon</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" routerLink="login">Logout</a>
+      </li>
+    </ul>
+  
+  </div>
+  </nav>
 <router-outlet></router-outlet>
 </div>

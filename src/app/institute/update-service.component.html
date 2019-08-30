@@ -1,6 +1,7 @@
-<div class="well form-new service">
-    <h3>Database Service Setting <span class="text-primary">{{institute.name}}</span></h3>
-        <form [formGroup]="dbServiceForm" class="form-horizontal">
+<div class="form-new service">
+    
+        <form [formGroup]="dbServiceForm" class="form-horizontal card card-body bg-light m-1">
+        <h3>Database Service Setting <span class="text-primary">{{institute.name}}</span></h3>
         <div class="form-group" [ngClass]="{'has-error' : formErrors.dbType }">
                 <label class="control-label" for="dbType">Type</label>
                 <select class="form-control" formControlName="dbType" (change)="onDbTypeChange()">
@@ -49,7 +50,7 @@
         </div>
         <div class="form-group" *ngIf="checkDbType()=='file'">
                 <label for="file">File</label><br>
-                <label id="file" class="btn btn-default btn-file form-control">
+                <label id="file" class="btn btn-success btn-file form-control">
                         {{checkFileName()}}
                             
                 <input type="file"
@@ -68,9 +69,9 @@
         <div class="translate-form" *ngIf="true">
                 <h4>
                     Translate Field
-                <button (click)="addMoreTranslate()" class="btn btn-xs btn-success">Tambah</button>
+                <button (click)="addMoreTranslate()" class="btn btn-sm btn-success">Tambah</button>
                 </h4>
-                <div class="translate-label" *ngIf="gTranslates().controls.length > 0">
+                <div class="translate-label row" *ngIf="gTranslates().controls.length > 0">
                         <div class="col-sm-5">
                                 <label>Origin Translate Table</label>
                         </div>
@@ -96,8 +97,8 @@
             </div>
             <hr>
         <div class="form-group">
-                <button class="btn btn-default btn-md pull-left" type="button" (click)="previousState()" [disabled]="isUpdating">Back</button>
-                <button class="btn btn-primary btn-md pull-right" type="button" (click)="onSubmit()" [disabled]="isUpdating">Submit</button>
+                <button class="btn btn-dark btn-sm float-left" type="button" (click)="previousState()" [disabled]="isUpdating">Back</button>
+                <button class="btn btn-primary btn-sm float-right" type="button" (click)="onSubmit()" [disabled]="isUpdating">Submit</button>
                 
         </div>
         </form>

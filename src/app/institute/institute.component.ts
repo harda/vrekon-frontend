@@ -6,6 +6,8 @@ import { IInstitute, Institute } from '../shared/model/institute.model';
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 import { VHelper } from '../shared/helpers';
 import { DbSrvc } from '../shared/model/dbSrvc.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { deleteConfirmationDialog } from './delete.confirmation.dialog';
 
 @Component({
   selector: 'app-institute',
@@ -17,6 +19,7 @@ export class InstituteComponent implements OnInit {
   constructor(
     private service: VrekonService,
     private fb : FormBuilder,
+    private modalService: NgbModal
     ) { }
   institutes : IInstitute[];
   newInstitute : IInstitute;
@@ -97,17 +100,27 @@ export class InstituteComponent implements OnInit {
 
   deleteInstitute(id: number){
     this.isUpdating = true;
-    this.service.deleteInstitute(id).subscribe(response => {
-        this.loadInstitutes();
-        this.isUpdating = false;
-    });
+    if(confirm("Are you sure to delete this")) {
+      this.service.deleteInstitute(id).subscribe(response => {
+          this.loadInstitutes();
+          this.isUpdating = false;
+      });
+    }
+    else{
+      this.isUpdating = false;
+    }
   }
   deleteService(id: number){
     this.isUpdating = true;
-    this.service.deleteDbService(id).subscribe(response => {
-        this.loadInstitutes();
-        this.isUpdating = false;
-    });
+    if(confirm("Are you sure to delete this")) {
+      this.service.deleteDbService(id).subscribe(response => {
+          this.loadInstitutes();
+          this.isUpdating = false;
+      });
+    }
+    else{
+      this.isUpdating = false;
+    }
   }
   protected onUpdateInstituteSuccess(res) {
 
@@ -174,5 +187,39 @@ export class InstituteComponent implements OnInit {
   onHttpError(res){
     this.isUpdating = false;
     VHelper.ShowHttpError(res);
+  }
+
+
+  openDeleteServiceModal(srvc,institusi) {
+    const modalRef = this.modalService.open(deleteConfirmationDialog, { centered: true });
+    modalRef.componentInstance.content = srvc.dbType+" - "+institusi.name;
+    modalRef.componentInstance.id = srvc.id;
+    modalRef.componentInstance.type = "service";
+    modalRef.result.then(
+      result => {
+        if(result == "berhasil"){
+          this.loadInstitutes();
+        }
+      },
+      reason => {
+        console.log(reason);
+      }
+    );
+  }
+  openDeleteInstituteModal(institusi) {
+    const modalRef = this.modalService.open(deleteConfirmationDialog, { centered: true });
+    modalRef.componentInstance.content = institusi.name;
+    modalRef.componentInstance.id = institusi.id;
+    modalRef.componentInstance.type = "institusi";
+    modalRef.result.then(
+      result => {
+        if(result == "berhasil"){
+          this.loadInstitutes();
+        }
+      },
+      reason => {
+        console.log(reason);
+      }
+    );
   }
 }

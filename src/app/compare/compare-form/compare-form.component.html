@@ -1,6 +1,7 @@
 <div class="" >
 <form [formGroup]="compareFormGroup" class="form-horizontal">
-    <div class="well compare-form-select">
+    <br>
+    <div class="card card-body bg-light compare-form-select">
 
         <h4>Compare Data</h4>
         <div class="row form-group"><div class="col-sm-6">Institusi</div></div>
@@ -46,7 +47,8 @@
         
 
     </div>
-    <div class="well compare-form-key">
+    <br>
+    <div class="card card-body bg-light compare-form-key">
         <h4>
             Compare Key
         <button (click)="addMoreKey()" class="btn btn-xs btn-success">Tambah</button>
@@ -64,8 +66,8 @@
             </div>
         </div>
         <br>
-        <div class="pull-right">
-            <button (click)="submitResult()" class="btn btn-primary btn-sm">Result</button>
+        <div >
+            <button (click)="submitResult()" class="btn btn-primary btn-sm float-sm-right">Result</button>
         </div>
         <br>
         <br>

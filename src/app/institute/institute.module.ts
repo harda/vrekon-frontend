@@ -5,7 +5,8 @@ import {
     InstituteComponent,
     UpdateServiceComponent,
     instituteRoute,
-    institutePopupRoute
+    institutePopupRoute,
+    deleteConfirmationDialog
 } from './';
 import { UpdateInstituteComponent } from './update-institute.component';
 
@@ -13,7 +14,7 @@ const ADDED_COMPONENT = [
     InstituteComponent,
     UpdateInstituteComponent,
     UpdateServiceComponent,
-
+    deleteConfirmationDialog
 ];
 const MY_ROUTE = [
     ...instituteRoute, 

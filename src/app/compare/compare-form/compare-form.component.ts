@@ -12,6 +12,8 @@ import { ICompareResult } from 'src/app/shared/model/compareResult.model';
 import { Router, NavigationExtras} from "@angular/router";
 import { ResultData } from '../../providers/result-data';
 import { VHelper } from '../../shared/helpers';
+
+import { SpinnerService } from '../../providers/spinner/spinner.service'
 @Component({
   selector: 'app-compare-form',
   templateUrl: './compare-form.component.html',
@@ -30,7 +32,8 @@ export class CompareFormComponent implements OnInit {
     private fb : FormBuilder,
     private service : VrekonService,
     private router : Router,
-    private resultData : ResultData
+    private resultData : ResultData,
+    private spinnerService : SpinnerService
     ) { }
 
   ngOnInit() {
@@ -65,7 +68,7 @@ export class CompareFormComponent implements OnInit {
       idInstitusiTo:[""],
       idServiceFrom:[""],
       idServiceTo:[""],
-      rekonCompareKey: this.fb.array([this.createKey(null)])
+      rekonCompareKey: this.fb.array([this.createKey("acquirer")])
     });
   }
 
@@ -89,7 +92,7 @@ export class CompareFormComponent implements OnInit {
   submitResult(){
     this.compareF = new CompareForm();
     this.compareF = this.compareFormGroup.value
-    
+    this.spinnerService.show();
     this.service.compareData(this.compareF).subscribe(
       (res: HttpResponse<ICompareResult>) => this.onCompareSuccess(res), 
       (res: HttpErrorResponse) => this.onCompareError(res)
@@ -98,6 +101,8 @@ export class CompareFormComponent implements OnInit {
   }
 
   onCompareSuccess(res){
+
+    this.spinnerService.hide();
     if(VHelper.responseStatus(res.body)){
       this.resultData.result = res.body.response[0];
       //console.log(this.resultData.result);
@@ -110,7 +115,7 @@ export class CompareFormComponent implements OnInit {
   }
 
   onCompareError(res){
-    
+    this.spinnerService.hide();
     VHelper.ShowHttpError(res);
   }
   removeKey(i){
