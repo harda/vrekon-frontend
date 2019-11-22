@@ -1,6 +1,6 @@
 {
     "/api":{
-        "target":"http://85.187.132.46:8080/vrekon/",
+        "target":"http://localhost:8080/vrekon/",
         "targeta":"http://restdev.jepit.co.id/v1/vrekon/",
         "secure":false,
         "changeOrigin":true,

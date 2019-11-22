@@ -10,11 +10,18 @@
     
     <h3> RESULT </h3>
     <div class="row">
-        <div class="col-sm-6">
-            <table class="table table-sm table-bordered table-condensed table-striped" [hidden]="isEmpty()">
+        <div class="col-sm-12">
+        <div class="table-responsive">
+            <table class="table table-small table-bordered table-condensed table-striped" [hidden]="isEmpty()">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th style="width:60px;">#</th>
+                        <ng-container *ngFor="let item of resultRekon[0] | keyvalue">
+                            <th *ngIf="checkKeyRow(item.key,1)">
+                                    {{ keyName(item.key) }}
+                            </th>
+                        </ng-container>
+                        <th style="width:30px;">&nbsp;</th>
                         <ng-container *ngFor="let item of resultRekon[0] | keyvalue">
                             <th *ngIf="checkKeyRow(item.key,1)">
                                     {{ keyName(item.key) }}
@@ -31,27 +38,7 @@
                                         {{ item.value }}
                                 </td>
                             </ng-container>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-sm-6">
-            <table class="table table-sm table-bordered table-condensed table-striped" [hidden]="isEmpty()">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <ng-container *ngFor="let item of resultRekon[0] | keyvalue">
-                            <th *ngIf="checkKeyRow(item.key,2)">
-                                    {{ keyName(item.key) }}
-                            </th>
-                        </ng-container>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngFor="let rr of resultRekon | keyvalue ; let i = index">
-                        <tr [className]="getStatusClass(rr.value['status'])">
-                            <td>{{ i + 1}}</td>
+                            <td>&nbsp;</td>
                             <ng-container *ngFor="let item of rr.value | keyvalue">
                                 <td *ngIf="checkKeyRow(item.key,2)">
                                         {{ item.value }}
@@ -59,10 +46,11 @@
                             </ng-container>
                         </tr>
                     </ng-container>
-                
                 </tbody>
             </table>
         </div>
+        </div>
+        
     </div>
     <div class="form-group">
     <button class="btn btn-dark btn-sm float-left" (click)="previousState()">Back</button>
