@@ -6,12 +6,9 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package.json /app/package.json
 RUN npm install
-RUN npm install -g @angular/cli
+RUN npm install -g @angular/cli@8.1.3
 
 COPY . /app
-
-RUN nvm alias default node 10.16.0
-RUN nvm use 8.10.0
 
 RUN ng build --output-path=dist
 
