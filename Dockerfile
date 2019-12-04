@@ -10,6 +10,9 @@ RUN npm install -g @angular/cli
 
 COPY . /app
 
+RUN nvm alias default node 10.16.0
+RUN nvm use 8.10.0
+
 RUN ng build --output-path=dist
 
 
