@@ -5,13 +5,6 @@ pipeline {
         DOCKER_IMAGE_NAME = "harda00/vrekon-frontend"
     }
     stages {
-        stage('Build') {
-            steps {
-                echo 'Running build automation'
-                sh 'ng build --output-path=dist'
-                archiveArtifacts artifacts: 'dist/vrekon-frontend.zip'
-            }
-        }
         stage('Build Docker Image') {
             when {
                 branch 'master'

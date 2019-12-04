@@ -1,4 +1,4 @@
-FROM node:8.16.2-stretch-slim
+FROM node:8.16.2-stretch-slim AS build
 
 WORKDIR /app
 
@@ -10,5 +10,14 @@ RUN npm install -g @angular/cli@8.16.2
 
 COPY . /app
 
-EXPOSE 4200
-CMD ng server --host 0.0.0.0 --port 4200
+RUN ng build --output-path=dist
+
+
+
+FROM nginx:stable-alpine
+
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
