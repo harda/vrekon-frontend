@@ -1,5 +1,6 @@
 FROM node:10.17-stretch-slim AS build
 
+RUN mkdir /app
 WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
