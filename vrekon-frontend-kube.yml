@@ -36,13 +36,6 @@ spec:
         image: $DOCKER_IMAGE_NAME:$BUILD_NUMBER
         ports:
         - containerPort: 4200
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 4200
-          initialDelaySeconds: 15
-          timeoutSeconds: 1
-          periodSeconds: 10
         resources:
           requests:
             cpu: 200m
